@@ -1,0 +1,473 @@
+LinkedList 
+
+List의 인터페이스를 구현하고 있는 클래스
+
+원소를 추가 할 수 있고 순서대로 인덱스 번호로 해당하는 원소를 가져올 수 있음
+
+구현 시 삭제와 추가에 있어서 원소들의 좌우 이동이 빈번했던 Ar.List 와 달리 각각의 원소들 끼리는 끈으로 연결이 되어 있어서 중간에 있는 원소를 삭제해도 다른 원소들이 좌우로 움직이지 않는다.
+
+추가와 삭제에 있어서 유리한 표현이다.
+
+가장 앞에 있는 원소에 대한 메소드(First)와 마지막 원소에 대한 메소드(Last) 가 존재한다.
+
+Queue 라는 인터페이스의 구현체를 사용할 수도 있다. (First in, First out)
+
+offer , remove, poll, 
+
+Stack 이라는 인터페이스의 구현체를 사용할 수도 있다. (Last in, First out)
+
+push, pop,  
+
+Hash Set 
+
+```jsx
+import java.util.HashSet;
+
+public class Main {
+
+	public static void main(String[] args) {
+		HashSet set = new HashSet();
+		set.add("qwer");
+		set.add(Integer.valueOf(10));
+		set.add("qwer"); //0번 인덱스와 중복이 되기 때문에 걸러짐
+		
+		System.out.println(set.size()); //그래서 사이즈는 2
+//set 객체는 고유 인덱스를 가지고 있지 않다.
+
+		for (Object o : set) {
+			System.out.println(o);
+		} //for each 문 활용
+
+		Iterator<Object> it = set.iterator();
+		while (it.hasNext()) {
+			System.out.println(it.next());
+		} // Iterator 활용
+
+	}
+
+}
+```
+
+set 객체는 고유 인덱스를 가지고 있지 않다.
+
+for each 문과 Iterator 를 활용하여 원소값들에게 접근한다.
+
+set 의 특징은 삽입 순서를 신경 쓰지 않고 무작위로 출력
+
+Set을 활용하여 중복값을 나타내는 여러 표현
+
+```jsx
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+public class Main4 {
+
+	public static void main(String[] args) {
+		Set<Integer> setA = new HashSet<>(Arrays.asList(1, 2, 3, 4, 5));
+		Set<Integer> setB = new HashSet<>(Arrays.asList(3, 4, 5, 6, 7));
+		
+		Set<Integer> setUnion = new HashSet<>();
+		setUnion.addAll(setA);
+		setUnion.addAll(setB);
+		
+		System.out.println(setUnion);
+
+	}
+
+}
+```
+
+교집합 구하는 법 (retainAll)
+
+```jsx
+Set<Integer> setDuplicate = new HashSet<>();
+		setDuplicate.addAll(setA);
+		setDuplicate.retainAll(setB);
+```
+
+A 차집합 구하는 법 (removeAll)
+
+```jsx
+Set<Integer> setLeft = new HashSet<>();
+		setLeft.addAll(setA);
+		setLeft.removeAll(setB);
+		System.out.println(setLeft);
+```
+
+중복이 없는 난수 6개를 만들고
+
+오름차순으로 정렬하는 법
+
+```jsx
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
+public class Main5 {
+
+	public static void main(String[] args) {
+		//증복되지 않는 1 ~ 45 사이의 정수 6개를 가지는 집합
+		Set<Integer> lotto = new HashSet<>();
+		Random random = new Random(45);
+		
+		while(lotto.size() < 6) {
+		lotto.add(random.nextInt(45) + 1);
+		}
+		
+		System.out.println(lotto);
+		
+		List<Integer> list = new ArrayList<>(lotto);
+		
+		Collections.sort(list);
+		
+		System.out.println(list);
+	}
+
+}
+```
+
+동일 객체 비교를 위한 메소드 설정
+
+```jsx
+@Override //숫자값 만들기
+	public int hashCode() {
+		return Objects.hash(price, title);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Book other = (Book) obj;
+		return price == other.price && Objects.equals(title, other.title);
+	}
+```
+
+하나의 객체를 필드값 기준으로 오름차순 정렬하기
+
+```jsx
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
+
+class Book implements Comparable<Book>{
+	private String title;
+	private int price;
+	public Book(String title, int price) {
+		super();
+		this.title = title;
+		this.price = price;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
+	@Override
+	public String toString() {
+		return "Book [title=" + title + ", price=" + price + "]";
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(price, title);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Book other = (Book) obj;
+		return price == other.price && Objects.equals(title, other.title);
+	}
+	
+	@Override
+	public int compareTo(Book o) { // 이름순 정렬을위한 추상메소드 재설정
+		return title.compareTo(o.title);
+	}
+	
+	
+	
+	
+	
+	
+}
+
+public class Main8 {
+
+	public static void main(String[] args) {
+		Book b1 = new Book("허클", 5000);
+		Book b2 = new Book("허클", 5000);
+		Book b3 = new Book("톰", 7000);
+		Book b4 = new Book("논", 4000);
+		
+		Set<Book> tree = new TreeSet<>();
+		tree.add(b1);
+		tree.add(b2);
+		tree.add(b3);
+		tree.add(b4);
+		System.out.println(tree);
+		
+		Comparator<Book> com = new Comparator<Book>() { //임의의 클래스 설정(가격 필드 순으로 정렬을 위함)
+			@Override 
+			public int compare(Book o1, Book o2) {
+				return o1.getPrice() - o2.getPrice();
+			}
+		};
+		
+		Set<Book> ptree = new TreeSet<>(com);
+		ptree.add(b1);
+		ptree.add(b2);
+		ptree.add(b3);
+		ptree.add(b4);
+		
+		System.out.println(ptree);
+	
+
+	}
+
+}
+```
+
+HashMap  key and Value
+
+```jsx
+import java.util.HashMap;
+
+public class Main {
+
+	public static void main(String[] args) {
+		HashMap map = new HashMap();
+		map.put("일", 1); // 왼쪽이 key, 오른쪽이 value
+		map.put("이", 2);
+		map.put("삼", 3);
+		map.put("사", 4);
+		
+		System.out.println(map.size());
+		
+		System.out.println(map.get("이"));
+		
+		if (map.containsKey("이")) {
+			map.put("이", 2222);
+		};
+		
+		System.out.println(map.get("이"));
+
+	}
+
+}
+```
+
+해쉬맵, 키셋
+
+```jsx
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+public class Main2 {
+
+	public static void main(String[] args) {
+		Map<String, Integer> map = new HashMap<>();
+		
+		map.put("둘리", 100);
+		map.put("홍길동", 90);
+		map.put("도우너", 150);
+		
+		Map<Integer, String> map2 = new HashMap<>();
+		
+		map2.put(1, "둘리");
+		map2.put(4, "홍길동");
+		map2.put(3, "도우너");
+		
+		Set<String> keySet = map.keySet(); //문자열 형태의 keySet 에 반환
+		Iterator<String> it = keySet.iterator();
+		while (it.hasNext()) {
+			String key = it.next(); // map 의 key 를 변수에 집어넣음
+			Integer value = map.get(key); // get(key)(밸루) 를 변수에 집어넣음
+			
+			System.out.println(key + " " + value);
+		}
+
+	}
+
+}
+```
+
+```jsx
+Set<Entry<String, Integer>> entrySet = map.entrySet(); 
+		for (Entry<String , Integer> e : entrySet) {
+			System.out.println(e.getKey() + " " + e.getValue());
+		}
+```
+
+단어 빈도수 찾기
+
+```jsx
+import java.util.*;
+public class WordFreq {
+
+	public static void main(String[] args) {
+		Map<String, Integer> m = new HashMap<String, Integer>();
+		
+		String[] sample = {"to", "be", "or", "not", "to", "be", "is", "a", "problem"};
+		
+		for (String a : sample) {
+			Integer freq = m.get(a);
+			m.put(a, (freq == null) ? 1 : freq + 1);
+		}
+		
+		System.out.println(m.size() + "단어가 있습니다");
+		System.out.println(m.containsKey("to"));
+		System.out.println(m.isEmpty());
+		System.out.println(m);
+
+	}
+
+String line = "Hello. I'm a java developer.";
+		Map<Character, Integer> m2 = new HashMap<Character, Integer>();
+
+		for (int i = 0; i < line.length(); i++) {
+			char c = line.charAt(i);
+			if (!m2.containsKey(c)) {
+				m2.put(c, 1);
+			} else {
+				m2.put(c, m2.get(c) + 1);
+			}
+		}
+		System.out.println(m2);
+
+}
+```
+
+객체지향 맵 구현
+
+```jsx
+import java.util.Map.Entry;
+import java.util.*;
+
+// 중국집 주문 가격 계산기
+// 짜장면 : 2500
+// 짬뽕 : 4000
+// 볶음밥 : 4000
+// 탕수육 : 10000
+
+// 계산 결과 출력 기능
+// 메뉴를 추가 할 수 있음
+// 추가된 메뉴도 함께 계산 결과가 출력 가능하게 하거라.
+public class Cheongpagwan {
+
+	String menu;
+
+	public Cheongpagwan(String menu) {
+		this.menu = menu;
+
+	}
+
+	@Override
+	public String toString() {
+		return menu;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(menu);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cheongpagwan other = (Cheongpagwan) obj;
+		return Objects.equals(menu, other.menu);
+	}
+
+	public static int getSum() {
+		Scanner s = new Scanner(System.in);
+		Map<Cheongpagwan, Integer> map = new HashMap<>();
+		map.put(new Cheongpagwan("짜장면"), 2500);
+		map.put(new Cheongpagwan("짬뽕"), 4000);
+		map.put(new Cheongpagwan("볶음밥"), 4000);
+
+		System.out.println("짜장면 몇그릇 뭇노?");
+		int howza = s.nextInt();
+
+		System.out.println("짬뽕 몇그릇 뭇노?");
+		int howzam = s.nextInt();
+
+		System.out.println("볶음밥 몇그릇 뭇노?");
+		int howbok = s.nextInt();
+		int sum = (map.get(new Cheongpagwan("짜장면")) * howza) + (map.get(new Cheongpagwan("짬뽕")) * howzam)
+				+ (map.get(new Cheongpagwan("볶음밥")) * howbok);
+
+		System.out.println(sum);
+
+		System.out.println("메뉴 추가할래? \n 1.예 \n 2.예");
+		int a = s.nextInt();
+		
+		if (a == 1 || a == 2) {
+		System.out.println("추가할 메뉴 이름이랑 가격 입력하셈");
+		}
+		
+		String temp = s.nextLine();
+		String newmenu = s.nextLine();
+		int newp = s.nextInt();
+
+		map.put(new Cheongpagwan(newmenu), newp);
+		System.out.println("메뉴 추가 완료  \n" + map);
+
+		System.out.println("짜장면 몇그릇 뭇노?");
+		int nhowza = s.nextInt();
+
+		System.out.println("짬뽕 몇그릇 뭇노?");
+		int nhowzam = s.nextInt();
+
+		System.out.println("볶음밥 몇그릇 뭇노?");
+		int nhowbok = s.nextInt();
+
+		System.out.println(newmenu + " 몇그릇 뭇노?");
+		int howt = s.nextInt();
+
+		int newsum = (map.get(new Cheongpagwan("볶음밥")) * nhowbok) + (map.get(new Cheongpagwan("짬뽕")) * nhowzam)
+				+ (map.get(new Cheongpagwan("짜장면")) * nhowza) + (map.get(new Cheongpagwan(newmenu)) * howt);
+
+//		System.out.println(newsum);
+
+		return newsum;
+
+	}
+
+	public static void main(String[] args) {
+
+		System.out.println(getSum());
+
+	}
+
+}
+```
