@@ -1,0 +1,260 @@
+trim :  문자열의 좌우 공백을 제거한 문자열을 반환
+
+ArrayList
+
+```jsx
+import java.util.ArrayList;
+
+public class Main {
+
+	public static void main(String[] args) {
+		ArrayList list = new ArrayList();
+		list.add("문자열 객체");
+		list.add(new Object());
+		list.add(Integer.valueOf(100));
+		//기본형 타입의 value 값을 집어넣을 수가 없다.
+    list.add(500); // int 타입의 500을 Integer 타입으로 오토박싱이 일어남.
+
+System.out.println(list.get(0)); // 별다른 반복문 없이 바로 접근자를 통해 인덱스 번호와 함께 값을 출력 가능하다.
+	}
+
+}
+
+//합구하기 
+
+import java.util.ArrayList;
+
+public class Main2 {
+
+	public static void main(String[] args) {
+		ArrayList<Integer> list = new ArrayList(); //제네릭 안에 비교타입을 명시적으로 설정해줌
+		list.add(100);
+		list.add(156);
+		list.add(109);
+		list.add(99);
+		list.add(21);
+		
+		int sum = 0;
+		for(int i = 0; i < list.size(); i++) {
+			sum += list.get(i);
+
+		}
+		System.out.println(sum);
+		
+
+	}
+
+}
+```
+
+Iterator 객체는 리스트 안의 값을 보게 해주는 객체이다.
+
+```jsx
+Iterator<String> iterator = list.iterator();
+		while (iterator.hasNext()) {
+			String str = iterator.next();
+			if(str.length() == 5) {
+				iterator.remove();
+			}
+		}
+		
+		System.out.println(list);
+		
+	}
+
+// 순환을 위한 원소 삭제를 위해선 iterator 객체가 필수이다.
+```
+
+Collections 를 활용한 다양한 메소드
+
+```jsx
+package list;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class Main6 {
+
+	public static void main(String[] args) {
+		List<Integer> list = new ArrayList<>(Arrays.asList(7, 3, 2, 9, 1));
+
+		Collections.sort(list);
+		System.out.println(list);
+
+		int index = Collections.binarySearch(list, 7);
+		System.out.println(index);
+
+		Collections.reverse(list);
+		System.out.println(list);
+		
+		Collections.shuffle(list);
+		System.out.println(list);
+
+		System.out.println(Collections.max(list));
+		
+		
+		Collections.fill(list, 10);
+		System.out.println(list);
+		
+		Collections.replaceAll(list, 10, 11);
+		System.out.println(list);
+		
+		
+		List<Integer> target = new ArrayList<>(Arrays.asList(90, 80, 70));
+		Collections.copy(list, target);
+		System.out.println(list);
+
+	}
+
+}
+```
+
+```jsx
+package list;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
+// 2의 배수를 5개 가지는 정수형 리스트 생성 및 초기화하기
+// 7의 배수를 5개 가지는 정수형 리스트 생성 및 초기화해보기
+// 위의 리스트의 원소들을 모두 다 가지는 리스트
+// 3번의 리스트를 오름차순으로 정렬된 원소를 가지는 복사리스트
+public class Main7 {
+
+	public static void main(String[] args) {
+		List<Integer> two = new ArrayList<>(Arrays.asList(2, 4, 6, 8, 10));
+
+		List<Integer> seven = new ArrayList<>(Arrays.asList(7, 14, 21, 28, 35));
+
+		List<Integer> all = new ArrayList<>(seven);
+		all.addAll(0, two);
+		System.out.println(all);
+
+		Collections.sort(all);
+		System.out.println(all);
+
+		List<Integer> listRandom = new ArrayList<>();
+		Random random = new Random();
+		while (listRandom.size() < 6) {
+			int result = random.nextInt(11);
+			if (!listRandom.contains(result)) {
+				listRandom.add(result);
+			}
+		}
+		System.out.println(listRandom);
+
+	}
+
+}
+```
+
+합, 평균, 해당 값 인덱스, 중복값 하나 삭제하기
+
+```jsx
+package list;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+public class Main8 {
+
+	public static void main(String[] args) {
+		List<Integer> list = new ArrayList<>(Arrays.asList(3, 23, 11, 23, 57, 79));
+		int count = 0;
+		int sum = 0;
+		for(int i = 0; i < list.size(); i++) {
+			sum += list.get(i);
+
+		}
+		System.out.println(sum);
+		System.out.println(sum / list.size());
+		
+		if(list.contains(57)) {
+			System.out.println(list.indexOf(57));
+		} else {};
+		
+		
+		Iterator<Integer> iterator = list.iterator();
+		while(iterator.hasNext()) {
+			if (iterator.next() == 23) {
+				count++;
+			}
+		}
+		System.out.println(count);
+		
+		int index = list.indexOf(23); //자동 Integer값으로 박싱이 된 상태.
+		list.remove(index);
+		System.out.println(list);
+		
+	}
+
+}
+```
+
+```jsx
+package list;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+public class Main9 {
+
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>(Arrays.asList("apple", "banana", "carrot", "donut", "egg"));
+
+		// 위의 리스트에서 문자열 길이가 5글자인 문자열만을 원소로 가지는 리스트 생성
+		// 문자열 중에 'e' 문자를 포함하는 문자열만 리스트 생성
+		List<String> integer = new ArrayList<>(list);
+		Iterator<String> it = integer.iterator();
+		while (it.hasNext()) {
+			if (it.next().length() != 5) {
+				it.remove();
+			}
+		}
+		System.out.println(integer);
+		
+		List<String> em = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			String str = list.get(i);
+			if (str.contains("e")) {
+				em.add(str);
+			}
+		}
+		System.out.println(em);
+
+		
+		
+	
+
+		List<String> list2 = new ArrayList<>(Arrays.asList("가", "1", "@", "3", "나"));
+		
+		
+		List<Integer> emlist = new ArrayList(); // 깡통 리스트
+		for (int i = 0; i < list2.size(); i++) {
+			String str = list2.get(i);
+			try {
+			Integer value = Integer.valueOf(str); // 형변환
+			emlist.add(value);
+			} catch (Exception e) {
+				
+			}
+		}
+		System.out.println(emlist);
+
+		// 위의 2번 리스트에서 "정수형태의 값" 을 가지는 문자열을 찾아
+		// 해당 원소를 가지는 정수형 리스트 생성
+
+	}
+
+}
+```
